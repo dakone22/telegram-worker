@@ -1,18 +1,58 @@
 import json
+import os
+
 from telethon.sync import TelegramClient, events
 
-with open("auth.json", "r") as f:
-    auth = json.load(f)
 
-api_id = auth["api_id"]
-api_hash = auth["api_hash"]
+def send_message_data(message_data):
+    OUTPUT_FILENAME = "output.json"
+    if os.path.exists(OUTPUT_FILENAME):
+        with open(OUTPUT_FILENAME, "r", encoding="utf-8") as f:
+            messages = json.load(f)
+    else:
+        messages = []
 
-with TelegramClient('session_name', api_id, api_hash) as client:
-    client.send_message('me', 'Hello, myself!')
-    print(client.download_profile_photo('me'))
+    messages.append(message_data)
 
-    @client.on(events.NewMessage(pattern='(?i).*Hello'))
+    with open("output.json", "w", encoding="utf-8") as output:
+        json.dump(messages, output, indent=4)
+
+
+async def main():
+    print("Started")
+
+    CHATS_TO_LISTEN = [
+        "me",
+        "telegram",
+        "RBCCrypto",
+        "breakingmash",
+    ]
+
+    @client.on(events.NewMessage(chats=CHATS_TO_LISTEN))
     async def handler(event):
-        await event.reply('Hey!')
+        print(event.message)
 
-    client.run_until_disconnected()
+        message_data = {
+            "chat_id": event.chat_id,
+            "sender_id": event.sender_id,
+            "message_id": event.message.id,
+            "timestamp": event.message.date.timestamp(),
+            "message": event.message.message,
+        }
+
+        send_message_data(message_data)
+
+
+if __name__ == '__main__':
+    with open("auth.json", "r") as f:
+        auth = json.load(f)
+
+    name = "session_name"
+    api_id = auth["api_id"]
+    api_hash = auth["api_hash"]
+
+    client = TelegramClient(name, api_id, api_hash)
+
+    with client:
+        client.loop.run_until_complete(main())
+        client.run_until_disconnected()

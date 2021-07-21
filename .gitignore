@@ -321,3 +321,7 @@ $RECYCLE.BIN/
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm,windows,linux,macos
 
 auth.json
+*.session
+*.session-journal
+
+output.json
