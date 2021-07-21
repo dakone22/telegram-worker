@@ -1,3 +1,5 @@
+#! ./venv/Scripts/python
+
 import json
 import os
 
