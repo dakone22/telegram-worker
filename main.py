@@ -32,7 +32,7 @@ if DEBUG:
 else:
     from kafka import KafkaProducer
 
-    producer = KafkaProducer(bootstrap_servers=os.environ.get("KAFKA-SERVER", 'wrong-kafka-server'))
+    producer = KafkaProducer(bootstrap_servers=os.environ.get("KAFKA_SERVER"))
 
 
     def send_message_data(message_data):
