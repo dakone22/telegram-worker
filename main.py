@@ -48,7 +48,7 @@ async def main():
 
 
 if __name__ == '__main__':
-    if bool(os.environ.get('DEBUG', True)):
+    if not bool(os.environ.get('DEPLOY', False)):
         logging.info("DEBUG=True; Loading from auth.json")
         with open("auth.json", "r") as f:  # {"api_id": {{}},"api_hash": "{{}}","bot_token": "{{}}"}
             auth = json.load(f)

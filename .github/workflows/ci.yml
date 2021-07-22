@@ -20,4 +20,5 @@ jobs:
           port: ${{ secrets.PORT }}
           script: |
             cd ~/deployed/telegram-worker && git checkout master && git pull origin master
-            cd ~/deployed && docker stop telegram-worker && docker rm telegram-worker && docker-compose build telegram-worker && docker-compose --env-file ./config/telegram-worker.env up -d telegram-worker
+            cd ~/deployed && (docker stop telegram-worker && docker rm telegram-worker) || true
+            cd ~/deployed && docker-compose build telegram-worker && docker-compose --env-file ./config/telegram-worker.env up -d telegram-worker
