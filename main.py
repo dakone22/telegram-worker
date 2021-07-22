@@ -1,7 +1,9 @@
-#! ./venv/Scripts/python
+#!/usr/bin/python3
+
 
 import json
 import os
+import logging
 
 from telethon.sync import TelegramClient, events
 
@@ -21,7 +23,7 @@ def send_message_data(message_data):
 
 
 async def main():
-    print("Started")
+    logging.info("Started")
 
     CHATS_TO_LISTEN = [
         "me",
@@ -32,7 +34,7 @@ async def main():
 
     @client.on(events.NewMessage(chats=CHATS_TO_LISTEN))
     async def handler(event):
-        print(event.message)
+        logging.info(event.message)
 
         message_data = {
             "chat_id": event.chat_id,
@@ -46,14 +48,26 @@ async def main():
 
 
 if __name__ == '__main__':
-    with open("auth.json", "r") as f:
-        auth = json.load(f)
+    if bool(os.environ.get('DEBUG', True)):
+        logging.info("DEBUG=True; Loading from auth.json")
+        with open("auth.json", "r") as f:  # {"api_id": {{}},"api_hash": "{{}}","bot_token": "{{}}"}
+            auth = json.load(f)
+    else:
+        logging.info("DEBUG=False; Loading from env")
+        auth = {
+            "api_id": int(os.environ.get("API_ID", 'wrong-ip')),
+            "api_hash": os.environ.get("API_HASH", 'wrong-hash'),
+            "bot_token": os.environ.get("BOT_TOKEN", 'wrong-bot-token'),
+        }
 
-    name = "session_name"
+    name = "bot"
     api_id = auth["api_id"]
     api_hash = auth["api_hash"]
 
     client = TelegramClient(name, api_id, api_hash)
+
+    if "bot_token" in auth:
+        client = client.start(bot_token=auth["bot_token"])
 
     with client:
         client.loop.run_until_complete(main())
