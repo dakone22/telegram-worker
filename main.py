@@ -6,6 +6,7 @@ import logging
 import os
 
 from telethon.sync import TelegramClient, events
+import python_socks
 
 logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
 logger = logging.getLogger('telegram-worker')
@@ -68,7 +69,7 @@ if __name__ == '__main__':
     api_id = auth["api_id"]
     api_hash = auth["api_hash"]
 
-    client = TelegramClient(name, api_id, api_hash)
+    client = TelegramClient(name, api_id, api_hash, proxy=(python_socks.ProxyType.SOCKS5, '72.223.168.67', 4145))
 
     if "bot_token" in auth:
         logger.info("Using BOT TOKEN")
