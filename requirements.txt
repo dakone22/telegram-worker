@@ -1,5 +1,1 @@
 Telethon
-requests
-python-socks[asyncio]
-async-timeout
-python_socks
