@@ -32,7 +32,7 @@ if DEBUG:
 else:
     from kafka import KafkaProducer
 
-    producer = KafkaProducer(bootstrap_servers=os.environ.get("KAFKA_SERVER"))
+    producer = KafkaProducer(security_protocol="SSL", bootstrap_servers=os.environ.get("KAFKA_HOST"))
 
 
     def send_message_data(message_data):
@@ -60,7 +60,7 @@ async def main(client):
 
             await client(JoinChannelRequest(channel))
             logger.info(f"Joined to {channel}")
-        except Exception as e:
+        except Exception:
             logger.warning(f"Error while trying join to chat {chat}")
 
     @client.on(events.NewMessage(chats=CHATS_TO_LISTEN))
