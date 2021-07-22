@@ -3,7 +3,6 @@
 
 import json
 import os
-import logging
 
 from telethon.sync import TelegramClient, events
 
@@ -23,7 +22,7 @@ def send_message_data(message_data):
 
 
 async def main():
-    logging.info("Started")
+    print("Started")
 
     CHATS_TO_LISTEN = [
         "me",
@@ -34,7 +33,7 @@ async def main():
 
     @client.on(events.NewMessage(chats=CHATS_TO_LISTEN))
     async def handler(event):
-        logging.info(event.message)
+        print(event.message)
 
         message_data = {
             "chat_id": event.chat_id,
@@ -48,12 +47,12 @@ async def main():
 
 
 if __name__ == '__main__':
-    if not bool(os.environ.get('DEPLOY', False)):
-        logging.info("DEBUG=True; Loading from auth.json")
+    if bool(os.environ.get('DEBUG', True)):
+        print("DEBUG=True; Loading from auth.json")
         with open("auth.json", "r") as f:  # {"api_id": {{}},"api_hash": "{{}}","bot_token": "{{}}"}
             auth = json.load(f)
     else:
-        logging.info("DEBUG=False; Loading from env")
+        print("DEBUG=False; Loading from env")
         auth = {
             "api_id": int(os.environ.get("API_ID", 'wrong-ip')),
             "api_hash": os.environ.get("API_HASH", 'wrong-hash'),
