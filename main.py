@@ -2,9 +2,14 @@
 
 
 import json
+import logging
 import os
 
 from telethon.sync import TelegramClient, events
+
+logging.basicConfig(format="%(asctime)s - %(name)s - %(levelname)s - %(message)s")
+logger = logging.getLogger('telegram-worker')
+logger.setLevel(logging.DEBUG)
 
 
 def send_message_data(message_data):
@@ -22,7 +27,7 @@ def send_message_data(message_data):
 
 
 async def main():
-    print("Started")
+    logger.info("Started")
 
     CHATS_TO_LISTEN = [
         "me",
@@ -33,7 +38,7 @@ async def main():
 
     @client.on(events.NewMessage(chats=CHATS_TO_LISTEN))
     async def handler(event):
-        print(event.message)
+        logger.info(event.message)
 
         message_data = {
             "chat_id": event.chat_id,
@@ -48,11 +53,11 @@ async def main():
 
 if __name__ == '__main__':
     if bool(os.environ.get('DEBUG', True)):
-        print("DEBUG=True; Loading from auth.json")
+        logger.debug("Authentication from auth.json")
         with open("auth.json", "r") as f:  # {"api_id": {{}},"api_hash": "{{}}","bot_token": "{{}}"}
             auth = json.load(f)
     else:
-        print("DEBUG=False; Loading from env")
+        logger.debug("Authentication from env values")
         auth = {
             "api_id": int(os.environ.get("API_ID", 'wrong-ip')),
             "api_hash": os.environ.get("API_HASH", 'wrong-hash'),
@@ -66,6 +71,7 @@ if __name__ == '__main__':
     client = TelegramClient(name, api_id, api_hash)
 
     if "bot_token" in auth:
+        logger.info("Using BOT TOKEN")
         client = client.start(bot_token=auth["bot_token"])
 
     with client:
