@@ -1,9 +1,9 @@
 name: Deploy action
 
-on:
-  push:
-    branches:
-      - 'master'
+#on:
+#  push:
+#    branches:
+#      - 'master'
 
 
 jobs:
@@ -11,13 +11,13 @@ jobs:
     name: Deploy
     runs-on: ubuntu-latest
     steps:
-      - name: executing remote ssh commands using ssh key
+      - name: Deploying through SSH
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.HOST }}
+          port: ${{ secrets.PORT }}
           username: ${{ secrets.USERNAME }}
           key: ${{ secrets.KEY }}
-          port: ${{ secrets.PORT }}
           script: |
             cd ~/deployed/telegram-worker && git checkout master && git pull origin master
             cd ~/deployed && (docker stop telegram-worker && docker rm telegram-worker) || true

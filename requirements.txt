@@ -1,2 +1,2 @@
-Telethon
-kafka-python
+Telethon~=1.23.0
+kafka-python~=2.0.2
