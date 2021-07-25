@@ -92,8 +92,7 @@ async def start(bot: TelegramClient):
 
             msg = """[{time}] New message in "{chat}":\n{content}""".format(
                 time=datetime.fromtimestamp(message.value["timestamp"]),
-                chat=(lambda e: e.title if isinstance(e, Channel) else e.first_name)(
-                    await bot.get_entity(message.value["chat_id"])),
+                chat=message.value["chat_id"],
                 content=message.value["message"]
             )
 
