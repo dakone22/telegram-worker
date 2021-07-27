@@ -7,7 +7,7 @@ from telethon.sync import TelegramClient, events
 from telethon.tl.functions.channels import JoinChannelRequest
 from telethon.tl.types import Channel
 
-from setup_logger import logger
+from src.utils import logger
 
 
 async def start(client: TelegramClient):

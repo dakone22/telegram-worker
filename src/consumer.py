@@ -4,14 +4,14 @@ from datetime import datetime
 
 from aiokafka import AIOKafkaConsumer
 from telethon import TelegramClient, events
-from telethon.tl.types import Channel
 
-from setup_logger import logger
-from simple_db import SimpleDB
+from src import DATA_DIR
+from src.utils import logger
+from src.utils.simple_db import SimpleDB
 
 
 async def start(bot: TelegramClient):
-    userdata = SimpleDB(os.path.join(os.environ.get("DATA_PATH", ''), "userdata.json"))
+    userdata = SimpleDB(os.path.join(DATA_DIR, "userdata.json"))
 
     @bot.on(events.NewMessage(pattern='/start'))
     async def on_start(event):
@@ -27,7 +27,8 @@ async def start(bot: TelegramClient):
 
     @bot.on(events.NewMessage(pattern='/help'))
     async def on_help(event):
-        await event.respond(f"**/help** - list of commands\n**/topics** - list of available topics\n**/mytopics** - list of subscribed topics\n**/subscribe <topic>** - subscribe\n**/unsubscribe <topic>** - !subscribe")
+        await event.respond(
+            f"**/help** - list of commands\n**/topics** - list of available topics\n**/mytopics** - list of subscribed topics\n**/subscribe <topic>** - subscribe\n**/unsubscribe <topic>** - !subscribe")
 
     @bot.on(events.NewMessage(pattern='/mytopics'))
     async def on_mytopics(event):
@@ -106,7 +107,7 @@ async def start(bot: TelegramClient):
 
 def main():
     auth = {
-        "session": "bot",
+        "session": os.path.join(DATA_DIR, "bot"),
         "api_id": int(os.environ.get("API_ID")),
         "api_hash": os.environ.get("API_HASH"),
     }

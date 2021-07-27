@@ -6,4 +6,4 @@ WORKDIR /telegram-worker/
 CMD exec apt-get update
 RUN pip install --no-cache-dir -r ./requirements.txt
 
-CMD python ./main.py
+CMD python ./src/__main__.py

@@ -1,22 +1,23 @@
 import json
 import os.path
-import logging
 
-logger = logging.getLogger("telegram-worker")
+from src.utils import logger
 
 
 class SimpleDB:
-    DEFAULT_VALUE = lambda: list()
-
     def __init__(self, location):
         self.data = None
         self.location = os.path.abspath(location)
 
         self.load(self.location)
 
+    @classmethod
+    def _get_default_value(cls):
+        return list()
+
     def load(self, location):
         if not os.path.exists(location):
-            self.data = SimpleDB.DEFAULT_VALUE()
+            self.data = SimpleDB._get_default_value()
         else:
             with open(self.location, "r") as fs:
                 try:
@@ -37,6 +38,6 @@ class SimpleDB:
         return True
 
     def reset(self):
-        self.data = SimpleDB.DEFAULT_VALUE()
+        self.data = SimpleDB._get_default_value()
         self.save()
         return True
