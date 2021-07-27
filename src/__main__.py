@@ -22,14 +22,28 @@ def main():
 
     chats_to_listen = [
         'me',
-        "RBCCrypto",
         "breakingmash",
+        "meduzalive",
+        "moscowmap",
+        "moscowach",
+        "corona",
+        "COVID2019_official",
+
+        "RBCCrypto",
         "buff_10",
         "DeCenter",
         "crypto_sekta",
         "SIGEN_Media",
         "ForkLog",
         "MinterNetwork",
+        "Proffit_crypto",
+        "Kriptamoney",
+        "incrypted",
+        "ico_analytic",
+        "crypto_forest",
+        "Pro_Blockchain",
+        "Rosenthal_signal",
+        "crypto_hike",
     ]
 
     with TelegramWorker(client, os.environ.get("KAFKA_HOST"), chats_to_listen) as worker, \
